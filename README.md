@@ -232,7 +232,7 @@ The project comes with a pre-built Auth feature.
 
 ---
 
-## 🛠 Engineering Standards
-- **Rules**: See `.agent/rules/rules.md`.
-- **Linting**: No strict linting setup in scaffold, but TS is set to strict mode.
-- **Commits**: Follow conventional commits.
+- **Quality Gates**: Enforced via `pre-push` hooks (ESLint, Black, Pylint 10/10).
+- **TypeScript**: Strict mode enabled with exhaustive type checking.
+- **Rules**: Comprehensive AI-assisted rules in `.agent/rules/rules.md`.
+- **Commits**: Conventional commits (feat, fix, style, docs) are preferred.
