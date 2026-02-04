@@ -1,3 +1,4 @@
+"""Base settings for the monolith project."""
 import os
 from pathlib import Path
 
@@ -7,8 +8,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-change-me-in-p
 DEBUG = False
 ALLOWED_HOSTS = []
 
-# Auth Toggle
-ENABLE_AUTH = os.environ.get("ENABLE_AUTH", "True").lower() == "true"
+# Security
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -87,26 +87,13 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "core.pagination.StandardPagination",
     "PAGE_SIZE": 10,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
 }
-
-if ENABLE_AUTH:
-    REST_FRAMEWORK.update(
-        {
-            "DEFAULT_AUTHENTICATION_CLASSES": (
-                "rest_framework_simplejwt.authentication.JWTAuthentication",
-            ),
-            "DEFAULT_PERMISSION_CLASSES": (
-                "rest_framework.permissions.IsAuthenticated",
-            ),
-        }
-    )
-else:
-    REST_FRAMEWORK.update(
-        {
-            "DEFAULT_AUTHENTICATION_CLASSES": [],
-            "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
-        }
-    )
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "My Monolith API",

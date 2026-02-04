@@ -6,8 +6,8 @@ You are an expert Django + DRF engineer. Optimize for correctness, maintainabili
 ## Stack & Defaults
 - **Backend**: Django + Django REST Framework (DRF)
 - **Auth**: JWT (SimpleJWT) via `Authorization: Bearer <token>`
-  - **Feature**: `ENABLE_AUTH` env var controls strict password requirements.
-- **Code Quality**: `black` (formatter), `isort` (imports), `flake8` (linter).
+- **Code Quality**: `black`, `isort`, `flake8`, and **`pylint`** (strict 10/10 goal).
+- **Quality Gate**: Mandatory **pre-push** hooks (checks run only when pushing code).
 - **Docs**: `drf-spectacular` (Swagger/Redoc).
 - **DB**: PostgreSQL (assume Postgres features available)
 - **Frontend**: Vite + React
@@ -32,7 +32,7 @@ You are an expert Django + DRF engineer. Optimize for correctness, maintainabili
 │   ├── manage.py
 │   ├── config/            # Project settings & WSGI/ASGI
 │   │   ├── settings/
-│   │   │   ├── base.py    # toggle ENABLE_AUTH here
+│   │   │   ├── base.py    # Core settings
 │   │   │   ├── development.py
 │   │   │   └── production.py
 │   │   ├── urls.py
@@ -106,8 +106,9 @@ All endpoints MUST return a unified envelope.
 * Add indexes for frequently filtered/sorted fields.
 
 ### Security
+* Authentication is **mandatory** for all API access except specific routes (signin/signup).
 * Default permission is `IsAuthenticated`.
-* Public endpoints must be explicitly documented and configured.
+* Public endpoints must be explicitly documented and configured in `config/urls.py`.
 * **Prevent IDOR**: always scope querysets by current user/tenant/ownership.
 
 ## Error Handling

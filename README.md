@@ -33,6 +33,8 @@ This project follows a "Starter Pack" architecture with enforced rules for code 
 | **Runtime** | Node.js | `v24` (LTS) | `.nvmrc` / `nvm` |
 | **Frontend** | React | `18.3.1` | `package.json` |
 | **Build Tool** | Vite | `7.3.1` | `package.json` |
+| **Quality** | Pre-commit | `latest` | `backend/requirements.txt` |
+| **Scoreboard** | Pylint | `10.00/10` | `.pylintrc` |
 
 ---
 
@@ -60,11 +62,11 @@ source .venv/bin/activate
 # Backend
 cp .env.example .env
 pip install -r requirements.txt
+pre-commit install --hook-type pre-push  # Set up quality gates
 python manage.py migrate
 
 # Frontend
 cd ../frontend
-cp .env.example .env
 npm install
 ```
 
@@ -87,7 +89,7 @@ The backend provides a strictly typed JSON API using Django REST Framework.
 
 ### Key Features
 - **Strict API Contract**: All responses follow a unified `{ success, message, data, meta }` envelope.
-- **Auth Toggle**: `ENABLE_AUTH` env var controls strict password/JWT requirements.
+- **Mandatory Auth**: Authentication is always enabled. SimpleJWT handles access/refresh.
 - **App Architecture**:
     - **`apps/`**: Domain Logic, Models, Migrations (e.g., `profiles`).
     - **`api/`**: Transport Logic, Serializers, Views, URLs.
@@ -100,7 +102,8 @@ The backend provides a strictly typed JSON API using Django REST Framework.
 - `production.py`: For deployment.
 
 **Environment Variables**:
-- `ENABLE_AUTH`: `True` (default) or `False`. Controls strict Auth/JWT enforcement.
+- `SECRET_KEY`: Django secret key.
+- `DEBUG`: Set to `True` for development.
 
 ### Running the Backend
 
@@ -133,14 +136,12 @@ The backend provides a strictly typed JSON API using Django REST Framework.
    # Runs on http://localhost:8000
    ```
 
-### Code Quality
-Maintain high standards using the following tools:
-
-- **Auto-Fixer (All)**: `black . && isort . && autoflake --in-place --remove-all-unused-imports --recursive .`
+### Code Quality (Push Hooks)
+This project enforces a **10.00/10 quality gate** via `pre-push` hooks. Checks run automatically when you push code, but not during local commits.
+- **Linter (Python)**: `pylint $(find . -name "*.py")`
 - **Formatter**: `black .`
 - **Imports**: `isort .`
-- **Clean Unused**: `autoflake --in-place --remove-all-unused-imports --recursive .`
-- **Linter**: `flake8`
+- **Linter (JS/TS)**: `npm run lint`
 
 ---
 
@@ -220,7 +221,6 @@ The project comes with a pre-built Auth feature.
    - Visit `/signup`.
    - Collects Username, Email, Name, and **Phone Number**.
    - Automatically creates `User` and linked `UserProfile`.
-   - If `ENABLE_AUTH=False` (Backend), password is optional.
 2. **Sign In**:
    - Visit `/signin`.
    - Receives JWT Access/Refresh tokens.

@@ -1,3 +1,4 @@
+"""Response generators for the common monolith app."""
 from rest_framework.response import Response
 
 

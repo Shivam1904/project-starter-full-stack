@@ -1,9 +1,13 @@
+"""Custom exception handlers for the API."""
 from rest_framework.views import exception_handler
 
 from .responses import error_response
 
 
 def custom_exception_handler(exc, context):
+    """
+    Custom exception handler to return unified JSON error responses.
+    """
     response = exception_handler(exc, context)
 
     if response is not None:
