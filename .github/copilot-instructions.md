@@ -1,5 +1,8 @@
 # Project Instructions (Django + DRF + React Monolith)
 
+> [!NOTE]
+> For high-level architecture overview, see [ARCHITECTURE.md](file:///Users/shivam/Documents/github/project-starter-full-stack/ARCHITECTURE.md).
+
 ## Role
 You are an expert Django + DRF engineer. Optimize for correctness, maintainability, and performance. Follow existing project conventions. Don’t invent new architecture.
 
@@ -12,10 +15,23 @@ You are an expert Django + DRF engineer. Optimize for correctness, maintainabili
 - **DB**: PostgreSQL (assume Postgres features available)
 - **Frontend**: Vite + React
 - **Environment**:
+  - Python: **3.11.x** (Mandatory)
+  - Node.js: **v24 (LTS)** (Mandatory via `.nvmrc`)
+  - Django: **5.2.11 (LTS)** (pinned in `requirements.txt`)
   - Backend runs on: **http://localhost:8000**
   - Frontend dev server: **http://localhost:5173**
   - **Virtual Env**: strict usage of `.venv` (managed via `direnv` or manual activate).
 - **CORS**: allow only `http://localhost:5173` in development
+
+## 🔍 Debugging & Profiling (Dev Mode Only)
+- **Backend (Django Silk)**: [http://localhost:8000/silk/](http://localhost:8000/silk/). Use to inspect SQL queries and request timing.
+- **Frontend (React Query Devtools)**: Floating icon in bottom-right. Use to inspect cache and fetch status.
+- **Frontend (React Scan)**: Visual indicators for re-renders. Use to find unnecessary component updates.
+
+### Debugging Procedures
+1. **N+1 Queries**: Visit `/silk/` to find duplicate queries. Fix using `select_related` or `prefetch_related`.
+2. **Data Invalidation**: Use **React Query Devtools** to verify cache invalidation after mutations.
+3. **Ghost Re-renders**: Use **React Scan** to identify and fix unnecessary component updates using `React.memo` or `useMemo`.
 
 ## Code Style & Formatting (Strict)
 - **Imports MUST be at the top** of the file. No inline imports.
@@ -58,7 +74,8 @@ You are an expert Django + DRF engineer. Optimize for correctness, maintainabili
 - **`config/`**: Project settings hub.
 - **`core/`**: Shared utilities (responses, exceptions) generic across apps.
 - **`api/`**: Transport only (serializers/views/urls).
-- If a feature needs models/business logic, create a dedicated Django app (e.g., `backend/<domain_app>/`) and keep business logic there.
+- **`apps/`**: Domain Logic (Models, Admin).
+  - **Rule**: Every new model MUST be registered in `admin.py` immediately.
 
 ## API Contract (Mandatory)
 All endpoints MUST return a unified envelope.
@@ -125,6 +142,17 @@ For every endpoint:
 * tests for: success, validation error, unauthorized (401), forbidden (403 if applicable).
 * if list endpoint: pagination tested.
 * if permissions apply: ownership scoping tested (IDOR prevention).
+
+## Common Patterns to Follow
+
+### Creating a New API Endpoint
+1. Define/Update Model in `apps/<domain>/models.py`.
+2. Register in `admin.py`.
+3. Write/Update Service in `apps/<domain>/services.py`.
+4. Create Serializer in `api/v1/<domain>/serializers.py`.
+5. Create ViewSet in `api/v1/<domain>/views.py`.
+6. Add Route in `api/v1/<domain>/urls.py`.
+7. Write Tests for success/error/permissions.
 
 ## Output Rules for the Assistant
 When implementing changes:

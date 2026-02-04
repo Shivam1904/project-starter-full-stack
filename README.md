@@ -145,6 +145,23 @@ This project enforces a **10.00/10 quality gate** via `pre-push` hooks. Checks r
 
 ---
 
+## 🔍 Debugging & Profiling
+
+This project includes powerful tools to help you identify performance bottlenecks and runtime issues.
+
+### Backend (Django Silk)
+- **What it does**: Intercepts and records all HTTP requests and database queries.
+- **Access**: Visit [http://localhost:8000/silk/](http://localhost:8000/silk/) while the backend is running.
+- **Usage**: Use this to find N+1 queries, slow database calls, and timing issues.
+
+### Frontend (React Query Devtools & React Scan)
+- **React Query Devtools**: Provides visibility into the server state, caching, and fetch status.
+    - **Access**: A small floating icon appears in the bottom right of the app in development.
+- **React Scan**: Highlights parts of the UI that are re-rendering.
+    - **How to use**: Watch for flashing outlines on components. If a component flashes when it shouldn't, consider optimizing with `useMemo` or `React.memo`.
+
+---
+
 ## ⚛️ Frontend (React)
 
 The frontend is a modern SPA built with performance and developer experience in mind.

@@ -1,9 +1,9 @@
-import { useNavigate } from 'react-router-dom';
 import { Hand } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '@/features/auth/hooks';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAuth } from '@/features/auth/hooks';
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
@@ -34,7 +34,6 @@ export default function ProfilePage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
       <div className="w-full max-w-2xl space-y-8 animate-in fade-in zoom-in duration-500">
-
         {/* Welcome Section */}
         <div className="flex flex-col items-center text-center space-y-4">
           <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-primary/10 ring-8 ring-background shadow-xl">

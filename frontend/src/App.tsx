@@ -1,11 +1,21 @@
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { scan } from 'react-scan';
 
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { Toaster } from '@/components/ui/sonner';
+
 import { Navbar } from './components/Navbar';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { AuthProvider } from './features/auth/hooks';
 import ProfilePage from './features/auth/pages/ProfilePage';
 import SignInPage from './features/auth/pages/SignInPage';
 import SignUpPage from './features/auth/pages/SignUpPage';
-import { AuthProvider } from './features/auth/hooks';
+
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  scan({
+    enabled: true,
+  });
+}
 
 function App() {
   return (
@@ -13,6 +23,7 @@ function App() {
       <BrowserRouter>
         <div className="min-h-screen bg-bg-canvas text-text-primary transition-colors duration-300">
           <Navbar />
+          <Toaster />
           <main>
             <Routes>
               <Route path="/signup" element={<SignUpPage />} />
@@ -28,6 +39,9 @@ function App() {
           </main>
         </div>
       </BrowserRouter>
+      {process.env.NODE_ENV === 'development' && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
     </AuthProvider>
   );
 }
