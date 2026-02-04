@@ -1,4 +1,5 @@
 """Custom exception handlers for the API."""
+
 from rest_framework.views import exception_handler
 
 from .responses import error_response

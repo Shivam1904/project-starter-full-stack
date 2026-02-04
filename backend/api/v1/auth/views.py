@@ -1,4 +1,5 @@
 """Authentication views for v1 API."""
+
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from drf_spectacular.utils import extend_schema
@@ -14,6 +15,7 @@ from .serializers import LoginSerializer, SignUpSerializer, UserSerializer
 
 class SignUpView(APIView):
     """View to handle user registration and initial profile setup."""
+
     permission_classes = [AllowAny]
 
     @extend_schema(request=SignUpSerializer, responses={200: UserSerializer})
@@ -54,6 +56,7 @@ class SignUpView(APIView):
 
 class MeView(APIView):
     """View to retrieve information about the currently authenticated user."""
+
     permission_classes = [IsAuthenticated]
 
     @extend_schema(responses={200: UserSerializer})
@@ -66,6 +69,7 @@ class MeView(APIView):
 
 class LoginView(APIView):
     """View to handle user authentication and token issuance."""
+
     permission_classes = [AllowAny]
 
     @extend_schema(request=LoginSerializer, responses={200: UserSerializer})

@@ -15,7 +15,7 @@ repos:
     rev: 25.1.0
     hooks:
       - id: black
-        args: [--root, backend]
+        files: ^backend/
 
   - repo: https://github.com/pycqa/flake8
     rev: 7.1.1

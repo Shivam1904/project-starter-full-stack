@@ -1,10 +1,12 @@
 """Models for the profiles application."""
+
 from django.conf import settings
 from django.db import models
 
 
 class UserProfile(models.Model):
     """Extended user data profile model."""
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
     )

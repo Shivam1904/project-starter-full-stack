@@ -1,4 +1,5 @@
 """Main entry point for API v1 routing."""
+
 from django.urls import include, path
 
 urlpatterns = [

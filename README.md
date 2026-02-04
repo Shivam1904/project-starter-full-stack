@@ -107,7 +107,7 @@ The backend provides a strictly typed JSON API using Django REST Framework.
 
 ### Running the Backend
 
-1. **Active Environment**: 
+1. **Active Environment**:
    Ensure Python 3.11 is active:
    ```bash
    cd backend
@@ -125,7 +125,7 @@ The backend provides a strictly typed JSON API using Django REST Framework.
    # Run migrations for all apps
    python manage.py makemigrations
    python manage.py migrate
-   
+
    # For specific apps (e.g., profiles)
    # python manage.py makemigrations profiles
    ```
@@ -168,7 +168,7 @@ The frontend is a modern SPA built with performance and developer experience in 
 
 ### Running the Frontend
 
-1. **Active Environment**: 
+1. **Active Environment**:
    Ensure Node v24 is active:
    ```bash
    cd frontend

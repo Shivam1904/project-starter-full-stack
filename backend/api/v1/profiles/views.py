@@ -1,4 +1,5 @@
 """Views for managing user profiles."""
+
 from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -11,6 +12,7 @@ from .serializers import UserProfileSerializer
 
 class ProfileMeView(APIView):
     """View to retrieve or update the authenticated user's profile."""
+
     permission_classes = [IsAuthenticated]
 
     @extend_schema(responses=UserProfileSerializer)
