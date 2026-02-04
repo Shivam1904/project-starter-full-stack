@@ -6,6 +6,7 @@ export interface User {
   email: string;
   first_name: string;
   last_name: string;
+  phone_number?: string;
 }
 
 export interface AuthResponse {
@@ -28,7 +29,7 @@ export const authApi = {
   },
 
   login: async (data: { username: string; password?: string }) => {
-    const res = await client.post('/auth/login/', data);
+    const res = await client.post('/auth/signin/', data);
     return res.data;
   },
 

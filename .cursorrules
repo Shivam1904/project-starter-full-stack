@@ -158,6 +158,7 @@ When implementing changes:
 - `src/components/` = reusable UI (layout, shared, ui)
 - `src/features/<feature>/` = feature-specific UI + hooks + api + types
 - `src/hooks/` = shared hooks
+- `src/lib/` = utilities (e.g. `utils.ts` for `cn`)
 - `src/types/` = global TS types
 
 ### Scaling rule

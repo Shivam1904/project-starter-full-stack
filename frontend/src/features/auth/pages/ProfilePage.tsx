@@ -1,54 +1,51 @@
 import { useNavigate } from 'react-router-dom';
+import { Hand } from 'lucide-react';
 
-import { useAuth } from '../hooks';
+import { useAuth } from '@/features/auth/hooks';
+import { Card, CardHeader } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProfilePage() {
-  const { user, loading, logout } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
 
-  if (loading) return <div>Loading...</div>;
-
-  if (!user) {
-    navigate('/signup');
+  // Redirect if not logged in (double check in render)
+  if (!loading && !user) {
+    navigate('/signin');
     return null;
   }
 
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6">
-      <div className="w-full max-w-lg overflow-hidden rounded-lg bg-white shadow">
-        <div className="px-4 py-5 sm:px-6">
-          <h3 className="text-base font-semibold leading-6 text-gray-900">
-            User Profile
-          </h3>
-          <p className="mt-1 text-sm text-gray-500">
-            Personal details and application status.
-          </p>
-        </div>
-        <div className="border-t border-gray-200">
-          <dl>
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Username</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                {user.username}
-              </dd>
-            </div>
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background p-4">
+        <Card className="w-full max-w-md border-none shadow-none bg-transparent">
+          <CardHeader className="flex flex-col items-center space-y-4">
+            <Skeleton className="h-24 w-24 rounded-full" />
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-4 w-32" />
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
 
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Role</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">User</dd>
-            </div>
-          </dl>
-        </div>
-        <div className="bg-gray-50 px-4 py-4 sm:px-6">
-          <button
-            onClick={() => {
-              logout();
-              navigate('/signup');
-            }}
-            className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
-          >
-            Sign Out
-          </button>
+  if (!user) return null;
+
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
+      <div className="w-full max-w-2xl space-y-8 animate-in fade-in zoom-in duration-500">
+
+        {/* Welcome Section */}
+        <div className="flex flex-col items-center text-center space-y-4">
+          <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-primary/10 ring-8 ring-background shadow-xl">
+            <Hand className="h-16 w-16 text-primary animate-wave origin-bottom-right" />
+          </div>
+          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl text-foreground">
+            Welcome, {user.first_name || user.username}!
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-md">
+            You are currently logged in.
+          </p>
         </div>
       </div>
     </div>

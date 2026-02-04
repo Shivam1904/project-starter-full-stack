@@ -1,4 +1,4 @@
-# My Monolith App (Django + React)
+# StarterApp (Django + React)
 
 A strict, scalable monolithic application featuring a **Django REST Framework** backend and a **React + TypeScript + Vite** frontend.
 
