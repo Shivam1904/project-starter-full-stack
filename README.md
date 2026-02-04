@@ -7,7 +7,7 @@ This project follows a "Starter Pack" architecture with enforced rules for code 
 ## 🏗 Project Layout
 
 ```bash
-/my-monolith-app
+/starter-app
 ├── backend/               # Django + DRF
 │   ├── .venv/             # Isolated Python Environment
 │   ├── config/            # Settings (Base, Dev, Prod)
@@ -159,12 +159,12 @@ The frontend is a modern SPA built with performance and developer experience in 
 - **Routing**: React Router DOM
 
 ### Architecture
-- **`src/api/`**: Centralized Axios client (`client.ts`) with interceptors.
+- **`src/lib/`**: Shared utilities (e.g., `utils.ts` for Shadcn's `cn` logic).
 - **`src/features/`**: Domain logic. E.g., `features/auth` contains:
+  - `AuthContext.tsx`: Global authentication state provider.
   - `api.ts`: API calls for that feature.
-  - `pages/`: Route components.
-  - `hooks.ts`: Feature-specific logic.
-- **`src/components/ui/`**: Atomic, reusable design tokens (Buttons, Cards, Inputs).
+  - `pages/`: Route components (SignIn, SignUp, Profile).
+- **`src/components/ui/`**: Reusable Shadcn/UI components built on Radix Primitives.
 
 ### Running the Frontend
 
@@ -227,8 +227,8 @@ The project comes with a pre-built Auth feature.
    - **Auto-Refresh**: Interceptor refreshes tokens transparently on 401s.
 3. **Profile**:
    - Visit `/profile` (Protected Route).
-   - Fetches user info from `/api/v1/auth/me/` and `/api/v1/profiles/me/`.
-   - Demonstrates token usage and protected route logic.
+   - Displays a friendly **Welcome Dashboard** with the user's name and an animated waving avatar (Hand icon).
+   - Fetches user info from `/api/v1/auth/me/` via the global `AuthContext`.
 
 ---
 
