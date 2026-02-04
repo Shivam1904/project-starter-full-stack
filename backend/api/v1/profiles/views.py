@@ -4,8 +4,9 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from apps.profiles.models import UserProfile
+from apps.profiles.services import get_or_create_profile
 from core.responses import error_response, success_response
+from core.serializers import SuccessResponseSerializer
 
 from .serializers import UserProfileSerializer
 
@@ -15,18 +16,19 @@ class ProfileMeView(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(responses=UserProfileSerializer)
+    @extend_schema(responses={200: SuccessResponseSerializer})
     def get(self, request):
         """Retrieve the current user's profile."""
-        # "Just works"™ logic
-        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        profile = get_or_create_profile(request.user)
         serializer = UserProfileSerializer(profile)
         return success_response(data=serializer.data)
 
-    @extend_schema(request=UserProfileSerializer, responses=UserProfileSerializer)
+    @extend_schema(
+        request=UserProfileSerializer, responses={200: SuccessResponseSerializer}
+    )
     def patch(self, request):
         """Update fields on the current user's profile."""
-        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        profile = get_or_create_profile(request.user)
         serializer = UserProfileSerializer(profile, data=request.data, partial=True)
 
         if serializer.is_valid():

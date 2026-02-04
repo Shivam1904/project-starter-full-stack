@@ -28,7 +28,7 @@ shell: ## Open Django shell
 test: backend-test frontend-test ## Run all tests
 
 backend-test: ## Run backend tests
-	@cd backend && pytest
+	@cd backend && python manage.py test
 
 frontend-test: ## Run frontend tests
 	@cd frontend && npm test

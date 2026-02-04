@@ -1,4 +1,5 @@
 import client from '@/api/client';
+import { ApiResponse } from '@/types/api';
 
 export interface User {
   id: number;
@@ -23,18 +24,21 @@ export const authApi = {
     first_name?: string;
     last_name?: string;
     phone_number?: string;
-  }) => {
+  }): Promise<ApiResponse<AuthResponse>> => {
     const res = await client.post('/auth/signup/', data);
-    return res.data; // Expects { success: true, data: { user, access, refresh } }
+    return res.data;
   },
 
-  login: async (data: { username: string; password?: string }) => {
+  login: async (data: {
+    username: string;
+    password?: string;
+  }): Promise<ApiResponse<AuthResponse>> => {
     const res = await client.post('/auth/signin/', data);
     return res.data;
   },
 
-  getMe: async () => {
+  getMe: async (): Promise<ApiResponse<User>> => {
     const res = await client.get('/auth/me/');
-    return res.data; // Expects { success: true, data: User }
+    return res.data;
   },
 };

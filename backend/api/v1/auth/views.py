@@ -5,10 +5,10 @@ from django.contrib.auth.models import User
 from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.profiles.models import UserProfile
+from apps.profiles.services import create_user_and_profile, get_tokens_for_user
 from core.responses import error_response, success_response
+from core.serializers import SuccessResponseSerializer
 
 from .serializers import LoginSerializer, SignUpSerializer, UserSerializer
 
@@ -18,7 +18,7 @@ class SignUpView(APIView):
 
     permission_classes = [AllowAny]
 
-    @extend_schema(request=SignUpSerializer, responses={200: UserSerializer})
+    @extend_schema(request=SignUpSerializer, responses={200: SuccessResponseSerializer})
     def post(self, request):
         """Handle POST request for signup."""
         serializer = SignUpSerializer(data=request.data)
@@ -27,29 +27,26 @@ class SignUpView(APIView):
 
         username = serializer.validated_data["username"]
         password = serializer.validated_data.get("password")
+        phone_number = serializer.validated_data.get("phone_number")
 
         if User.objects.filter(username=username).exists():
             return error_response(
                 message="Username already exists", error_code="USERNAME_TAKEN"
             )
-        user = User.objects.create_user(username=username, password=password)
 
-        # Create User Profile if phone number exists
-        phone_number = serializer.validated_data.get("phone_number")
-        if phone_number:
-            UserProfile.objects.get_or_create(
-                user=user, defaults={"phone_number": phone_number}
-            )
+        # Use service layer
+        user, _ = create_user_and_profile(
+            username=username, password=password, phone_number=phone_number
+        )
 
-        # Generator Tokens
-        refresh = RefreshToken.for_user(user)
+        tokens = get_tokens_for_user(user)
 
         return success_response(
             message="User created successfully",
             data={
                 "user": UserSerializer(user).data,
-                "access": str(refresh.access_token),
-                "refresh": str(refresh),
+                "access": tokens["access"],
+                "refresh": tokens["refresh"],
             },
         )
 
@@ -59,7 +56,7 @@ class MeView(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(responses={200: UserSerializer})
+    @extend_schema(responses={200: SuccessResponseSerializer})
     def get(self, request):
         """Handle GET request for current user info."""
         return success_response(
@@ -72,7 +69,7 @@ class LoginView(APIView):
 
     permission_classes = [AllowAny]
 
-    @extend_schema(request=LoginSerializer, responses={200: UserSerializer})
+    @extend_schema(request=LoginSerializer, responses={200: SuccessResponseSerializer})
     def post(self, request):
         """Handle POST request for login."""
         serializer = LoginSerializer(data=request.data)
@@ -90,13 +87,14 @@ class LoginView(APIView):
                 status=401,
             )
 
-        refresh = RefreshToken.for_user(user)
+        # Use service layer
+        tokens = get_tokens_for_user(user)
 
         return success_response(
             message="Login successful",
             data={
                 "user": UserSerializer(user).data,
-                "access": str(refresh.access_token),
-                "refresh": str(refresh),
+                "access": tokens["access"],
+                "refresh": tokens["refresh"],
             },
         )

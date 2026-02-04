@@ -1,7 +1,5 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
-import client from '@/api/client';
-
 import { authApi, User } from './api';
 
 interface AuthContextType {
@@ -23,7 +21,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.removeItem('token');
       localStorage.removeItem('refresh_token');
     }
-    delete client.defaults.headers.common['Authorization'];
     setUser(null);
   };
 
@@ -31,7 +28,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const initAuth = async () => {
       const token = localStorage.getItem('token');
       if (token) {
-        client.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         try {
           const res = await authApi.getMe();
           setUser(res.data);
@@ -49,7 +45,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = (access: string, refresh: string, userData: User) => {
     localStorage.setItem('token', access);
     localStorage.setItem('refresh_token', refresh);
-    client.defaults.headers.common['Authorization'] = `Bearer ${access}`;
     setUser(userData);
   };
 
