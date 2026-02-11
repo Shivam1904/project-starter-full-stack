@@ -28,13 +28,38 @@ This project follows a "Starter Pack" architecture with enforced rules for code 
 
 | Component | Technology | Version | Management |
 | :--- | :--- | :--- | :--- |
-| **Language** | Python | `3.11.x` | `brew install python@3.11` |
+| **Language** | Python | `3.11.x`* | `brew install python@3.11` or [python.org](https://www.python.org/downloads/) |
 | **Framework** | Django | `5.2.11` (LTS) | `requirements.txt` |
-| **Runtime** | Node.js | `v24` (LTS) | `.nvmrc` / `nvm` |
+| **Runtime** | Node.js | `v24` (LTS)* | `nvm` or [nodejs.org](https://nodejs.org/) |
 | **Frontend** | React | `18.3.1` | `package.json` |
 | **Build Tool** | Vite | `7.3.1` | `package.json` |
 | **Quality** | Pre-commit | `latest` | `backend/requirements.txt` |
 | **Scoreboard** | Pylint | `10.00/10` | `.pylintrc` |
+
+*\* Note: Python 3.10+ and Node.js 18+ should also work if 3.11/v24 are unavailable.*
+
+---
+
+## 🔐 Database & Admin Access
+
+Although the main application has authentication removed for simplicity, the **Django Admin Panel** remains available for database management.
+
+### 1. Create a Superuser
+To access the admin panel, you need a superuser account. For local development, we recommend:
+- **Username**: `root`
+- **Password**: `root`
+- **Email**: `root@example.com`
+
+```bash
+cd backend
+python manage.py createsuperuser
+```
+Follow the prompts, or use the recommended credentials above.
+
+### 2. Access the Admin Panel
+1. Start the backend: `python manage.py runserver`
+2. Open [http://localhost:8000/admin/](http://localhost:8000/admin/)
+3. Log in with the superuser credentials you just created.
 
 ---
 
@@ -45,17 +70,22 @@ Now, simply `cd backend` will activate your virtual environment.
 ## ⚡ Quick Start (First Time Setup)
 
 ### 1. Environment Sync
-```bash
-# Frontend: Lock Node version
-cd frontend
-nvm install   # Installs v24 from .nvmrc
-nvm use       # Puts v24 in your current shell
 
-# Backend: Lock Python version
+**Using nvm & Python 3.11:**
+```bash
+# Frontend
+cd frontend
+nvm install && nvm use
+
+# Backend
 cd ../backend
 python3.11 -m venv .venv
 source .venv/bin/activate
 ```
+
+**Alternative (No nvm or Python 3.11):**
+- **Node.js**: Download and install the latest LTS from [nodejs.org](https://nodejs.org/). Verify with `node -v`.
+- **Python**: Install Python 3.10+ from [python.org](https://www.python.org/downloads/). Use `python3 -m venv .venv` instead if `python3.11` is not found.
 
 ### 2. Configuration & Deps
 ```bash
@@ -89,7 +119,7 @@ The backend provides a strictly typed JSON API using Django REST Framework.
 
 ### Key Features
 - **Strict API Contract**: All responses follow a unified `{ success, message, data, meta }` envelope.
-- **Mandatory Auth**: Authentication is always enabled. SimpleJWT handles access/refresh.
+- **Simplified Access**: Authentication is disabled by default for this starter app.
 - **App Architecture**:
     - **`apps/`**: Domain Logic, Models, Migrations (e.g., `profiles`).
     - **`api/`**: Transport Logic, Serializers, Views, URLs.
@@ -216,36 +246,6 @@ The frontend is a modern SPA built with performance and developer experience in 
    - **Formatter**: `npm run format`
 
 ---
-
-## ⚠️ Important: Production Readiness (Auth)
-This project uses a **Simplified Authentication Flow** optimized for rapid development.
-1. **No Email Verification**: Users are active immediately upon signup.
-2. **Missing SMPT**: Email sending is not configured.
-3. **Pre-filled Defaults**: The `SignUpPage` is pre-filled with credentials to reduce friction.
-
-**Before going to Production:**
-- Enable Email Confirmation strategies in `backend/v1/auth`.
-- Remove default `useState` values in `frontend/src/features/auth/SignUpPage.tsx`.
-- Configure an SMTP provider (SendGrid/Amazon SES).
-
----
-
-
-## 🔒 Authentication Flow
-The project comes with a pre-built Auth feature.
-
-1. **Sign Up**:
-   - Visit `/signup`.
-   - Collects Username, Email, Name, and **Phone Number**.
-   - Automatically creates `User` and linked `UserProfile`.
-2. **Sign In**:
-   - Visit `/signin`.
-   - Receives JWT Access/Refresh tokens.
-   - **Auto-Refresh**: Interceptor refreshes tokens transparently on 401s.
-3. **Profile**:
-   - Visit `/profile` (Protected Route).
-   - Displays a friendly **Welcome Dashboard** with the user's name and an animated waving avatar (Hand icon).
-   - Fetches user info from `/api/v1/auth/me/` via the global `AuthContext`.
 
 ---
 
