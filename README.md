@@ -42,6 +42,33 @@ Now, simply `cd backend` will activate your virtual environment.
 
 ---
 
+## ⚙️ Dependency Setup (If Missing)
+
+### 🐍 Python 3.11
+If `python3.11` is not installed:
+- **macOS**: `brew install python@3.11`
+- **Linux/Ubuntu**: `sudo apt update && sudo apt install python3.11`
+- **Any OS (via pyenv)**:
+  ```bash
+  pyenv install 3.11.9
+  pyenv local 3.11.9
+  ```
+
+### 🟢 NVM (Node Version Manager)
+If `nvm` is not installed:
+- **Install NVM**:
+  ```bash
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+  ```
+- **Usage**:
+  ```bash
+  cd frontend
+  nvm install  # Uses version from .nvmrc
+  nvm use
+  ```
+
+---
+
 ## ⚡ Quick Start (First Time Setup)
 
 ### 1. Environment Sync
@@ -125,12 +152,16 @@ The backend provides a strictly typed JSON API using Django REST Framework.
    # Run migrations for all apps
    python manage.py makemigrations
    python manage.py migrate
-
-   # For specific apps (e.g., profiles)
-   # python manage.py makemigrations profiles
    ```
 
-3. **Start Server**:
+3. **Create Dev Superuser**:
+   Create a root superuser for development:
+   ```bash
+   python manage.py createsuperuser --username root --email root@example.com
+   # Set password to: root
+   ```
+
+4. **Start Server**:
    ```bash
    python manage.py runserver
    # Runs on http://localhost:8000
