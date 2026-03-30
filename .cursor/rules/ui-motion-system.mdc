@@ -1,0 +1,10 @@
+---
+description: Strict motion system rules (provider + motion sets)
+globs: frontend/src/**/*.{ts,tsx,css}
+alwaysApply: false
+---
+
+1. All animations must be controlled by `MotionProvider` (motion set + level) and respect `prefers-reduced-motion`; do not add ad-hoc animations in pages.
+2. Use `framer-motion` for component/route motion; prefer animating `opacity` and `transform` only.
+3. Motion must be optional: `motion set = none` or `level = off` disables animations without layout changes.
+4. New animated primitives/shells must use shared variants from `frontend/src/ui/motion/*` (no one-off durations/easings).

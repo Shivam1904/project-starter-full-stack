@@ -27,7 +27,10 @@ class SignUpView(APIView):
 
         username = serializer.validated_data["username"]
         password = serializer.validated_data.get("password")
-        phone_number = serializer.validated_data.get("phone_number")
+        email = serializer.validated_data.get("email") or ""
+        first_name = serializer.validated_data.get("first_name") or ""
+        last_name = serializer.validated_data.get("last_name") or ""
+        phone_number = serializer.validated_data.get("phone_number") or ""
 
         if User.objects.filter(username=username).exists():
             return error_response(
@@ -36,7 +39,12 @@ class SignUpView(APIView):
 
         # Use service layer
         user, _ = create_user_and_profile(
-            username=username, password=password, phone_number=phone_number
+            username=username,
+            password=password,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            phone_number=phone_number,
         )
 
         tokens = get_tokens_for_user(user)

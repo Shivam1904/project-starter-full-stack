@@ -1,12 +1,15 @@
 import client from '@/api/client';
 import { ApiResponse } from '@/types/api';
 
+import { UserRole } from '@/types/roles';
+
 export interface User {
   id: number;
   username: string;
   email: string;
   first_name: string;
   last_name: string;
+  role: UserRole;
   phone_number?: string;
 }
 

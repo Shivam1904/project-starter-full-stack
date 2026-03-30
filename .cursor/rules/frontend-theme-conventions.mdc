@@ -1,0 +1,10 @@
+---
+description: Frontend theme + styling conventions (keep UI modern)
+globs: frontend/src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+1. Theme usage: use `ThemeProvider` for light/dark mode and `ThemeWrapper` + `ThemeRegistry` for per-route accent; global color tokens live in `frontend/src/index.css`.
+2. Styling: prefer semantic Tailwind tokens/classes (`bg-background`, `text-foreground`, `border-border`, etc.) or include matching `dark:` variants for any fixed color.
+3. CSS constraint: do not create new `*.css`/`*.scss` files; only edit `frontend/src/index.css` for global theming/token changes.
+4. MUI (if introduced): prefer Material UI `sx={{ ... }}` for styling (avoid `style` prop and inline CSS).

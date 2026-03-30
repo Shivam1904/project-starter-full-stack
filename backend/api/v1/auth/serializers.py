@@ -7,11 +7,16 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for the standard Django User model."""
 
+    role = serializers.SerializerMethodField()
     class Meta:
         """Meta options for UserSerializer."""
 
         model = User
-        fields = ["id", "username", "email", "first_name", "last_name"]
+        fields = ["id", "username", "email", "first_name", "last_name", "role"]
+
+    def get_role(self, obj):
+        """Return the user role, defaulting to USER."""
+        return "USER"
 
 
 class SignUpSerializer(serializers.Serializer):

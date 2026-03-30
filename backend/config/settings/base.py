@@ -9,6 +9,15 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-change-me-in-p
 DEBUG = False
 ALLOWED_HOSTS = []
 
+# AI / LLM provider configuration
+# The API key is intentionally read from the environment so that it can be
+# configured per‑environment without changing code.
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+
+# Default model chosen to work with the free ChatGPT tier; you can override
+# this per environment via the OPENAI_MODEL environment variable if needed.
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
+
 # Security
 
 INSTALLED_APPS = [
@@ -27,6 +36,7 @@ INSTALLED_APPS = [
     "core",
     "api",
     "apps.profiles",
+    "apps.content_generator",
     "silk",
 ]
 
@@ -98,8 +108,8 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "My Monolith API",
-    "DESCRIPTION": "API Documentation for the Monolithic implementation",
+    "TITLE": "Project Starter API",
+    "DESCRIPTION": "API Documentation for the Project Starter app.",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "COMPONENT_SPLIT_REQUEST": True,

@@ -7,18 +7,30 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from apps.profiles.models import UserProfile
 
 
-def create_user_and_profile(username, password, phone_number=None):
+def create_user_and_profile(
+    username,
+    password,
+    *,
+    email=None,
+    first_name=None,
+    last_name=None,
+    phone_number=None,
+):
     """
     Orchestrates user creation and initial profile setup.
     """
     with transaction.atomic():
-        user = User.objects.create_user(username=username, password=password)
+        user = User.objects.create_user(
+            username=username,
+            email=email or "",
+            password=password,
+            first_name=first_name or "",
+            last_name=last_name or "",
+        )
 
-        profile = None
-        if phone_number:
-            profile, _ = UserProfile.objects.get_or_create(
-                user=user, defaults={"phone_number": phone_number}
-            )
+        profile, _ = UserProfile.objects.get_or_create(
+            user=user, defaults={"phone_number": phone_number or ""}
+        )
 
         return user, profile
 

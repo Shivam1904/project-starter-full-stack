@@ -11,5 +11,6 @@ class UserProfileAdmin(admin.ModelAdmin):
     Admin configuration for UserProfile model.
     """
 
-    list_display = ("user", "phone_number", "updated_at")
+    list_display = ("user", "phone_number", "bio", "created_at", "updated_at")
     search_fields = ("user__username", "user__email", "phone_number")
+

@@ -1,5 +1,3 @@
-"""Views for managing user profiles."""
-
 from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -36,3 +34,4 @@ class ProfileMeView(APIView):
             return success_response(message="Profile updated", data=serializer.data)
 
         return error_response(message="Validation Error", errors=serializer.errors)
+

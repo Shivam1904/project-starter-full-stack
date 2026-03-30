@@ -1,18 +1,29 @@
-import { Label as RadixLabel } from '@radix-ui/react-label';
-import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
+import { Label as RadixLabel } from '@radix-ui/react-label';
 
-import { cn } from '@/lib/utils';
+import { useUiSkin } from '@/ui/skins/UiSkinProvider';
+import type { UiSkin } from '@/ui/skins/types';
+import { GlassLabel, ComicLabel, BubbleLabel, ObsidianLabel } from '@/ui/skins/labels';
 
-const labelVariants = cva(
-  'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-);
+const labelMap: Record<
+  UiSkin,
+  React.ForwardRefExoticComponent<
+    React.ComponentPropsWithoutRef<typeof RadixLabel> & React.RefAttributes<HTMLLabelElement>
+  >
+> = {
+  glass: GlassLabel,
+  comic: ComicLabel,
+  bubble: BubbleLabel,
+  obsidian: ObsidianLabel,
+};
 
 const Label = React.forwardRef<
   React.ElementRef<typeof RadixLabel>,
-  React.ComponentPropsWithoutRef<typeof RadixLabel> & VariantProps<typeof labelVariants>
->(({ className, ...props }, ref) => {
-  return <RadixLabel ref={ref} className={cn(labelVariants(), className)} {...props} />;
+  React.ComponentPropsWithoutRef<typeof RadixLabel>
+>(({ ...props }, ref) => {
+  const { skin } = useUiSkin();
+  const SkinLabel = labelMap[skin];
+  return <SkinLabel ref={ref} {...props} />;
 });
 Label.displayName = RadixLabel.displayName;
 

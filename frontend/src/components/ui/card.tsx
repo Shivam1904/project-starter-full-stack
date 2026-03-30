@@ -1,20 +1,32 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { useUiSkin } from '@/ui/skins/UiSkinProvider';
+import type { UiSkin } from '@/ui/skins/types';
+import { GlassCard, ComicCard, BubbleCard, ObsidianCard } from '@/ui/skins/cards';
+
+/* ── Card root: dispatches to per-skin component ────────────────── */
+
+const cardMap: Record<
+  UiSkin,
+  React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>
+> = {
+  glass: GlassCard,
+  comic: ComicCard,
+  bubble: BubbleCard,
+  obsidian: ObsidianCard,
+};
 
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        'rounded-lg border bg-card text-card-foreground shadow-sm',
-        className,
-      )}
-      {...props}
-    />
-  ),
+  (props, ref) => {
+    const { skin } = useUiSkin();
+    const SkinCard = cardMap[skin];
+    return <SkinCard ref={ref} {...props} />;
+  },
 );
 Card.displayName = 'Card';
+
+/* ── Shared sub-components (same across all skins) ──────────────── */
 
 const CardHeader = React.forwardRef<
   HTMLDivElement,

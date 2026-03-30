@@ -1,0 +1,10 @@
+---
+description: Maintain multi-skin primitive system (comic/glass/bubble)
+globs: frontend/src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+1. Build UI from primitives in `components/ui/*`; pages and `common/components` must consume primitives and avoid direct one-off control styling.
+2. Active look-and-feel is selected by `UiSkinProvider` (`comic`, `glass`, `bubble`); style differences belong in `frontend/src/ui/skins/*`, not in pages.
+3. When adding/updating a primitive, implement the visual variant for **all** skins in `ui/skins/*` in the same change; do not leave a skin unimplemented.
+4. Keep primitive APIs semantic (`variant`, `size`, `tone`) so swapping skins or palettes changes visuals without changing page layout or feature code.

@@ -14,3 +14,4 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ["phone_number", "bio", "created_at", "updated_at"]
         read_only_fields = ["created_at", "updated_at"]
+

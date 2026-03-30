@@ -1,0 +1,11 @@
+---
+description: Frontend folder structure and layering (pages vs common vs primitives)
+globs: frontend/src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+1. Pages layer (`pages/*`): route-level screens and flows only (e.g. `pages/auth/SignInPage.tsx`, `pages/profile/ProfilePage.tsx`, `pages/alpha/AlphaPage.tsx` and nested `alpha-kids/*`). Pages compose from `common/components` and basic primitives; they should not contain low-level styling logic.
+2. Common layer (`common/components`, `common/constants`, `common/utils`): reusable, feature-agnostic building blocks (e.g. `SpecialEventCard`, `CustomBackground`, layout shells) that can be shared by multiple pages. These components may combine many basic primitives but should not own new design tokens.
+3. Primitives layer (`components/ui` and any future `basic-components/*`): low-level, theme-aware UI primitives (buttons, inputs, headings, chips, etc.). These are the only place to introduce new visual primitives, Tailwind token usage, or Material UI components (styled via `sx={{ … }}` rather than new CSS files).
+4. Use shared layout wrappers (`AppShell`, `PageShell`) for page chrome and spacing; do not recreate shell/grid structure in each page.
+5. Use typography primitives (`Heading`, `Text`, `Eyebrow`) for section/page titles instead of ad-hoc repeated text utility stacks.

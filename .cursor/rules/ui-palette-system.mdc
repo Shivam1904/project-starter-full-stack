@@ -1,0 +1,11 @@
+---
+description: Strict palette system rules for token-driven color themes
+globs: frontend/src/**/*.{ts,tsx,css}
+alwaysApply: false
+---
+
+1. Palette source must come from a curated color library (currently `@radix-ui/colors`) via `frontend/src/ui/palette/PaletteRegistry.ts`; do not invent arbitrary hex values per component.
+2. Palette selection is top-level only (`UiPaletteProvider`) and must update root design tokens; components/pages must never own palette state.
+3. Primitives and pages must use semantic tokens/classes (`bg-primary`, `text-primary-foreground`, `ring-ring`, `bg-accent`, etc.); do not hardcode brand colors like `text-blue-500` for core UI.
+4. Palette changes must not require primitive code edits: change tokens in palette registry and all existing components should update automatically.
+5. Palette entries may override accent tokens (`--primary`, `--primary-foreground`, `--ring`, `--accent`, `--accent-foreground`, `--secondary`, `--secondary-foreground`) and must not override neutral layout tokens (`--background`, `--foreground`, `--card`, `--muted`, `--border`).

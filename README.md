@@ -1,13 +1,14 @@
-# StarterApp (Django + React)
 
-A strict, scalable monolithic application featuring a **Django REST Framework** backend and a **React + TypeScript + Vite** frontend.
 
-This project follows a "Starter Pack" architecture with enforced rules for code quality, strict typing, and separation of concerns.
+## 🏗 Project Starter
+
+Platform to find and host events 
+
 
 ## 🏗 Project Layout
 
 ```bash
-/starter-app
+/appname
 ├── backend/               # Django + DRF
 │   ├── .venv/             # Isolated Python Environment
 │   ├── config/            # Settings (Base, Dev, Prod)
@@ -30,7 +31,7 @@ This project follows a "Starter Pack" architecture with enforced rules for code 
 | :--- | :--- | :--- | :--- |
 | **Language** | Python | `3.11.x` | `brew install python@3.11` |
 | **Framework** | Django | `5.2.11` (LTS) | `requirements.txt` |
-| **Runtime** | Node.js | `v24` (LTS) | `.nvmrc` / `nvm` |
+| **Runtime** | Node.js | `v24` (LTS) | `nvm install 24` |
 | **Frontend** | React | `18.3.1` | `package.json` |
 | **Build Tool** | Vite | `7.3.1` | `package.json` |
 | **Quality** | Pre-commit | `latest` | `backend/requirements.txt` |
@@ -71,42 +72,45 @@ If `nvm` is not installed:
 
 ## ⚡ Quick Start (First Time Setup)
 
-### 1. Environment Sync
+### 1. Backend Setup (Python 3.11)
 ```bash
-# Frontend: Lock Node version
-cd frontend
-nvm install   # Installs v24 from .nvmrc
-nvm use       # Puts v24 in your current shell
+# Install Python 3.11 if you haven't (on Mac)
+brew install python@3.11
 
-# Backend: Lock Python version
-cd ../backend
+# Setup virtual environment
+cd backend
 python3.11 -m venv .venv
 source .venv/bin/activate
+pip install -r requirements.txt
+python reset_database.py
 ```
 
-### 2. Configuration & Deps
+### 2. Frontend Setup (Node v24)
 ```bash
-# Backend
-cp .env.example .env
-pip install -r requirements.txt
-pre-commit install --hook-type pre-push  # Set up quality gates
-python manage.py migrate
-
-# Frontend
-cd ../frontend
+# We recommend using nvm
+cd frontend
+nvm install 24
+nvm use 24
 npm install
 ```
 
-### 3. Execution
+### 3. Start Developing
 ```bash
 # Terminal 1: Backend
-cd backend && python manage.py runserver
+cd backend && source .venv/bin/activate && python manage.py runserver
 
 # Terminal 2: Frontend
 cd frontend && npm run dev
 ```
 
 ---
+
+## 🔐 Admin Access & Database
+You can manage the database and users via the Django Admin portal.
+
+- **URL**: [http://localhost:8998/admin/](http://localhost:8998/admin/)
+- **Username**: `root`
+- **Password**: `root`
 
 ---
 
@@ -117,8 +121,9 @@ The backend provides a strictly typed JSON API using Django REST Framework.
 ### Key Features
 - **Strict API Contract**: All responses follow a unified `{ success, message, data, meta }` envelope.
 - **Mandatory Auth**: Authentication is always enabled. SimpleJWT handles access/refresh.
+- **Ephemeral Database**: No migrations - database is reset using `reset_database.py` script.
 - **App Architecture**:
-    - **`apps/`**: Domain Logic, Models, Migrations (e.g., `profiles`).
+    - **`apps/`**: Domain Logic, Models (e.g., `profiles`).
     - **`api/`**: Transport Logic, Serializers, Views, URLs.
     - **`core/`**: Shared Utils (Responses, Exceptions).
     - **Rule**: Every new model MUST be registered in `admin.py` immediately.
@@ -149,10 +154,17 @@ The backend provides a strictly typed JSON API using Django REST Framework.
 
 2. **Initialize Database**:
    ```bash
+   # Reset database (ephemeral - creates tables directly from models)
+   python reset_database.py
    # Run migrations for all apps
    python manage.py makemigrations
    python manage.py migrate
    ```
+   > **Note**: This project uses an ephemeral database approach. The `reset_database.py` script:
+   > - Deletes all migration files (except `__init__.py`)
+   > - Drops the existing database
+   > - Creates all tables directly from Django models
+   > - Creates a default superuser (`root` / `root`)
 
 3. **Create Dev Superuser**:
    Create a root superuser for development:
@@ -163,9 +175,14 @@ The backend provides a strictly typed JSON API using Django REST Framework.
 
 4. **Start Server**:
    ```bash
-   python manage.py runserver
-   # Runs on http://localhost:8000
+   python manage.py runserver 8998
    ```
+   Runs on http://localhost:8998
+
+> [!IMPORTANT]
+> **Port Configuration**: If you change the Django port (e.g., `python manage.py runserver 8998`), you **must** also update the `proxy` target in [frontend/vite.config.ts](file:///Users/aakarshika/Dev/appname/frontend/vite.config.ts) to match. Otherwise, the frontend will not be able to communicate with the API.
+
+---
 
 ### Code Quality (Push Hooks)
 This project enforces a **10.00/10 quality gate** via `pre-push` hooks. Checks run automatically when you push code, but not during local commits.
@@ -182,7 +199,7 @@ This project includes powerful tools to help you identify performance bottleneck
 
 ### Backend (Django Silk)
 - **What it does**: Intercepts and records all HTTP requests and database queries.
-- **Access**: Visit [http://localhost:8000/silk/](http://localhost:8000/silk/) while the backend is running.
+- **Access**: Visit [http://localhost:8998/silk/](http://localhost:8998/silk/) while the backend is running.
 - **Usage**: Use this to find N+1 queries, slow database calls, and timing issues.
 
 ### Frontend (React Query Devtools & React Scan)
@@ -231,9 +248,9 @@ The frontend is a modern SPA built with performance and developer experience in 
 2. **Start Dev Server**:
    ```bash
    npm run dev
-   # Runs on http://localhost:5173
    ```
-   *Note: Vite is configured to Proxy `/api` requests to `http://localhost:8000` automatically.*
+   # Runs on http://localhost:5995
+   *Note: Vite is configured to Proxy `/api` requests to `http://localhost:8998` automatically.*
 
 3. **Production Build**:
    ```bash
